@@ -32,6 +32,8 @@ import bpy
 
 from bpy.app.handlers import persistent
 
+#testing
+
 def elementTypeOverride_cb(*args):
     for obj in bpy.data.objects:
         if ( # exclude objects
