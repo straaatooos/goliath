@@ -26,13 +26,12 @@ from . import scanobj
 from . import mainPanel
 from . import conLines
 from . import utils
+from . import keymap
 
 import os
 import bpy
 
 from bpy.app.handlers import persistent
-
-#testing
 
 def elementTypeOverride_cb(*args):
     for obj in bpy.data.objects:
@@ -193,6 +192,8 @@ def register():
     bpy.app.handlers.load_post.append(goliathOnLoad)
     bpy.app.handlers.depsgraph_update_post.append(selectHandler)
 
+    keymap.register_keymaps()
+
 def unregister():
     conLines.unregister()
     mainPanel.unregister()
@@ -200,6 +201,8 @@ def unregister():
 
     bpy.app.handlers.load_post.remove(goliathOnLoad)
     bpy.app.handlers.depsgraph_update_post.remove(selectHandler)
+
+    keymap.unregister_keymaps()
 
 if __name__ == "__main__":
     register()
