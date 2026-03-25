@@ -34,14 +34,16 @@ def bboxObject(baseObj):
         # add a new object with the empty mesh 
         obj = bpy.data.objects.new(baseName + "_bbox", mesh)
         # link to scene/view layer
-        view_layer = bpy.context.view_layer
-        view_layer.active_layer_collection.collection.objects.link(obj)
+        for c in baseObj.users_collection:
+            c.objects.link(obj)
         # make child of baseObj
         obj.parent = baseObj
         obj.display_type = "WIRE"
         obj.hide_select = True
+        obj.hide_render = True
         obj.color = baseObj.color
-        obj.location = baseObj.location
+        obj.matrix_world = baseObj.matrix_world*1
+        obj.hide_set(baseObj.hide_get())
     else:
         # else clear existing bbox geometry
         me = bpy.data.objects[baseName + "_bbox"].data

@@ -73,7 +73,9 @@ def select_cb(obj):
         bpy.data.texts.new(obj.name)
         notes.text = bpy.data.texts[obj.name]
 
-    if [obj.name + "_bbox"] not in obj.children: # when adding new object, scan it instantly
+    try:
+        bpy.data.objects[obj.name+"_bbox"] # when adding new object, scan it instantly
+    except:
         scanobj.main(obj)
 
 def storey_cb(*args):
