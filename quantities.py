@@ -2,22 +2,26 @@ import bpy
 import bmesh
 import mathutils
 
-def calc(type):
+def calc(qtype, objs):
+
+    if type(objs) is bpy.types.Object:
+        objs = [objs]
+
     quantity = 0
     warning = []
     
-    if bpy.context.object.type == "EMPTY":
-        selected = bpy.context.object.children
-    else:
-        selected = bpy.context.selected_objects
+    # if bpy.context.object.type == "EMPTY":
+    #     selected = bpy.context.object.children
+    # else:
+    #     selected = bpy.context.selected_objects
     
-    for o in selected:
+    for o in objs:
         baseName = o.name
-        warningthresh = 1.2
+        warningthresh = 1.2 # make configurable
 
         try:
             bpy.data.objects[baseName + "_bbox"]
-            match type:
+            match qtype:
                 case "length": # find a way to not have this doubled
                     me = bpy.data.objects[baseName + "_bbox"].data
                     bm = bmesh.new()
@@ -95,8 +99,8 @@ def dotZ(edge):
     
     return abs(norm @ z)        
             
-def dimensions():
-    obj = bpy.context.object
+def dimensions(obj):
+    # obj = bpy.context.object
 
     dim = [0,0,0] # width, length, height
     

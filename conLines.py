@@ -4,7 +4,7 @@ import mathutils
 
 def conObject():
     # check if there already is a 0 object
-    if "0" not in bpy.context.scene.objects:
+    if "0" not in bpy.data.objects:
         # add a new empty mesh
         mesh = bpy.data.meshes.new("0")
         # add a new object with the empty mesh 
@@ -14,6 +14,13 @@ def conObject():
         view_layer.active_layer_collection.collection.objects.link(obj)
         obj.hide_select = True
         obj.color = [1,0.25,0.1,0.3]
+
+        obj.elementTypeOverride = 'Utility'
+        obj.elementType = 'Utility'
+    else:
+        if "0" not in bpy.context.scene.objects:
+            view_layer = bpy.context.view_layer
+            view_layer.active_layer_collection.collection.objects.link(bpy.data.objects["0"])
 
 class conLinesClearOperator(bpy.types.Operator):
     bl_idname = "goliath.conlinesclear"
@@ -40,13 +47,12 @@ class conLinesClearOperator(bpy.types.Operator):
         bpy.types.Scene.conlinesequence = [] # the "history" is saved here
 
         try:
-            bpy.context.scene.transform_orientation_slots[0].type = "Con Line"  # make configurable (maybe)
+            bpy.context.scene.transform_orientation_slots[0].type = "Construction Line"  # make configurable (maybe)
             bpy.ops.transform.delete_orientation()
         except:
             pass
 
         return {'FINISHED'}
-
 
 class conLinesOperator(bpy.types.Operator):
     bl_idname = "goliath.conlines"
@@ -146,12 +152,21 @@ class conLinesOperator(bpy.types.Operator):
         return verts
                         
     def duplicator(self):
+
+        selectedobjs = bpy.context.selected_objects
+        allverts = []
+        for obj in selectedobjs:
+            allverts.extend(obj.data.vertices[:])
+
         me = bpy.context.object.data
 
         bm = bmesh.from_edit_mesh(me)
 
+        worldloc = bpy.context.object.matrix_world.to_translation()
+
         # save the previous state to return to after usage
         prevmode = bpy.context.tool_settings.mesh_select_mode[:]
+        # prevselect = [v for v in allverts if v.select == True]
         prevselect = [v for v in bm.verts if v.select == True]
         prevselect.extend([e for e in bm.edges if e.select == True])
         prevselect.extend([f for f in bm.faces if f.select == True])
@@ -165,11 +180,11 @@ class conLinesOperator(bpy.types.Operator):
             bpy.ops.transform.delete_orientation() # if there is a custom orientation, delete it
         except:
             pass
-        bpy.ops.transform.create_orientation(name="Con Line", use=False, overwrite=True)
+        bpy.ops.transform.create_orientation(name="Construction Line", use=False, overwrite=True)
 
         bm = bmesh.from_edit_mesh(me)
         for v in bm.verts:
-            v.co += bpy.context.object.location # move from 0,0,0 to object position
+            v.co += worldloc # move from 0,0,0 to object position
 
         selected = [v for v in bm.verts if v.select == True]
         
@@ -214,7 +229,7 @@ class conLinesOperator(bpy.types.Operator):
             ele.select = True
 
         for v in bm.verts:
-            v.co -= bpy.context.object.location # move back to original position
+            v.co -= worldloc # move back to original position
         bmesh.update_edit_mesh(me)
         bm.free()
 
