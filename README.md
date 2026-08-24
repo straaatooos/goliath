@@ -32,7 +32,7 @@ Notes:
 Notes:
 - *Turned out, of course, to be very impractical, especially when working on other things than BIM objects (which should still be possible). Vertex Groups could still be a way to go. Also see Additions - Object hierarchies.*
 
-**Recursive Parent Object handling**
+**Recursive Parent Object handling**  
 ~~When working on Objects with Child Objects attached to it, using Duplicate duplicates the whole Parent/Child structure; using Remove removes the whole Parent/Child Structure~~ *(changed and moved to following section)*
 
 **Edit Mode translation**  
@@ -60,14 +60,14 @@ Notes:
 - The rules/heuristics of determining an object type can and probably should become more robust, while not increasing complexity to an unreasonable level. It does not need to be perfect, the override function exists for a reason, failure is expected.
 - Said rules could become customizable
 
-**Storeys**
+**Storeys**  
 Objects of Type Slab can be made to mark Storeys. Storey height is then set to the topmost (Global Z) Face of the Mesh. Every Object is put in one of the Storeys present in the Project based on the height. *The Storey Name (and possibly more properties in the future) can be specified in the Object.*
 
 Notes:
 - Non-Slab Storeys are not yet possible, maybe add Empty-based Storeys (as a secondary alternative!)
 - Objects can only be in one Storey; should it be possible for them to be in multiple, in none?
 
-**Custom "Goliath" Properties**
+**Custom "Goliath" Properties**  
 Similarly to native Blender, (Mesh) Objects and Materials can have custom properties, with respective property types. Additionally, each property has a certainty value attached to it, informing about the source and reliability of the property. These Properties represent what would be in Psets in traditional BIM software, which is why "Goliath" automatically suggests the Pset*Type*Common property names when adding a property.
 The goal was to remove the "hurdle" of creating and managing Psets, again simplifying and accelarating the working process.
 
@@ -83,7 +83,7 @@ Every Mesh Object is automatically put in an Object Oriented Bounding Box. This 
 Future:
 - The Bounding Box algorithm can be improved and made more robust. Unlike with Auto Types, there is no override for this, so it is desirable to have a near perfectly robust algorithm. The only limiting factor is software performance.
 
-**Quantities and Dimensions**
+**Quantities and Dimensions**  
 Using the Mesh and aforementioned Bounding Box geometry, four quantities can be calculated: Length; Area (of all Mesh faces); Volume; Object Count. As mentioned, dimensions are also determined from the Bounding Box.
 
 Notes:
@@ -99,7 +99,7 @@ Notes:
 - For the object count, show how many of each type.
 - Type override has no description yet.
 
-**Object Notes**
+**Object Notes**  
 On Object selection, a note Text is generated for the Object, if there is not yet one. It is automatically displayed in the bottom right corner of the window in the "Goliath" workspace. In it, users can write plain text about anything concerning the object.
 
 Notes:
@@ -117,7 +117,7 @@ Future:
 - Think about how Group Editing works; should it be possible to select grouped Objects individually, or should the group serve as a barrier, getting its own "Edit Mode"? (The latter is, of course, how most software handles groups)
 - Find a way to integrate Group properties into an Object's properties
 
-**Recursive Parent Object handling, Object attachments**
+**Recursive Parent Object handling, Object attachments**  
 *Objects come with attachments more or less automatically and forced. Right now, automatic attachments are Bounding Box Objects, Opening Ojbects and Notes (Texts). The underlying proposed and implemented logic is to have Objects consist of themselves and these attachments, meaning editing, copying and removing them affects the whole hierarchy instead of just the Object itself. Right now, this includes renaming, removing and duplicating objects. Object attachments work via the native Parent/Child system, Notes are attached via their name. This recursive nature is not limited to automatically attached Objects, but also affects all other Child objects*
 
 Notes:
@@ -134,7 +134,7 @@ Notes:
 Issues:
 - Construction Lines currently do not account for Object Rotation (this goes back to Object Logic; should they need to?).
 
-**Cameras**
+**Cameras**  
 Cameras contain a dimensions property, which is automatically used when the camera is active. This enables using cameras with specific image sizes. This is nothing new, but was "low hanging fruit" and therefore quickly integrated into the Addon. *Other Properties, like dpi and scale for orthographic cameras (effectively "drawings")*
 
 **Point Clouds**  
@@ -155,20 +155,20 @@ driven sectioning.
 Notes:
 - Since the Section Plane works via shader, it only works if an Object's Material is prepared correctly. For this, there is a Node Group in the Startup File that should be inserted just in front of the Shader Output Node. Optimally, this Node Group is integrated into new Materials by default. *Right now, it is not.*
 
-**Photos (new)**
+**Photos (new)**  
 Reference photos can be added into the scene. They are added as a Camera containing the chosen reference photo as a Background Image. The Camera is configured to match the focal length of the photo (that is written into the photos metadata). The proposed usage is to add the photo and manually position it into the scene. Opening a new Image Editor Window then enables browsing through photos by clicking on the Camera/Photo Object.
 
 Notes:
 - The positioning step would of course be nice to have automated. Maybe through feature matching like in photogrammetry software or through camera sensor metadata in the photo file.
 - This could be used to map which surfaces/Objects have been photographed and which might be missing. Related, it could be used to detect which Objects are shown in which photo, enabling yet another way of browsing through the photos.
 
-**Decompositions (new)**
+**Decompositions (new)**  
 When using Parent/Child hierarchies to document decompositions, these hierarchies can be navigated through level by level. For example: Parent Object is selected -> go down a level -> Parent is hidden and Children are displayed -> go up a level -> children are hidden and parent is displayed. The object panel always shows which objects the selected object consists of. This hierarchy system can be used in an arbitrary way. This is strongly related to the M3 design project.
 
-**Linked Hierarchies/Replace (new)**
+**Linked Hierarchies/Replace (new)**  
 Hierarchies can be linked in a way similar to linking Objects in native Blender. A linked Hierarchy contains Objects whose Mesh Data is linked with their twins from the original Hierarchy, along with their relative position to their Parent Object. The Replace Operator can be used to replace a selected Object with a specified Object/Hierarchy (its Children, their children and so on) at it the position of the replaced Object. The Object to Replace with is specified in the N-Panel ("Replace" tab). Alternatively, linked Hierarchies can be duplicated similar to duplicating linked Objects. Objects and Hierarchies can be unlinked via another Operator.
 
-**Openings (new)**
+**Openings (new)**  
 Openings can be added to selected Objects. Opening Objects are assigned the Element Type 'Opening' and parented to the selected Object. On operation, a Cube is added aligned to the selected object, along with an automatically configured Boolean Modifier. This is similar to how non-destructive, Boolean-based Add-Ons work (for example ND). Openings are shown only when their Opening Object is present in the active Scene.
 
 Notes:
@@ -176,17 +176,17 @@ Notes:
 - Openings are not yet considered in quantity calculation.
 - There should be a way to set the opening size (and maybe position) in the interface.
 
-**Demolish (new)**
+**Demolish (new)**  
 Whole Objects can be marked as "demolished" which results in them being displayed as a yellow Wireframe. The demolish status is stored in the Scene, meaning an Object can be marked as demolished in one scene but remain in its original status in another.
 
-**Scene Logic (new)**
+**Scene Logic (new)**  
 This is not really a feature but more of a technical proposition that is partly implemented through the points above. A way to show different states of the structure that is being worked on in the Project is to have them stored in different scenes. This could (already) work as follows: a "main" scene contains the structure in its current, as is state. Another scene contains the structure with the modifications (Openings and demolished or added Objects) contained in a new design proposal/variant. Past states could also be documented in other scenes. The choice "main" scene is the user's; it could be the original state from the far past or the current state.
 
 Notes:
 - Right now, the "main" scene is required to be named "Bestand". This was a quick and dirty solution and should obviously be changed.
 - It may be useful to have this stored in another way than Scenes and accordingly enable having different states present in the same scene (for example for design variants that concern only part of a structure).
 
-**Scale tool (new)**
+**Scale tool (new)**  
 A basic scale tool to scale and align Objects in a source to target way was implemented, however its usage/way of working is complicated and will likely be changed soon. To have this documentation be comprehensive, it is still mentioned in this way. It was used in the M3 project.
 
 
